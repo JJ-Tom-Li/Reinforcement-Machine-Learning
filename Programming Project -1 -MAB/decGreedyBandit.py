@@ -6,10 +6,10 @@ Created on Wed Oct  3 10:52:33 2018
 """
 import numpy as np
 
-class GreedyBandit():
-    def __init__(self,mu,mean):
+class DecGreedyBandit():
+    def __init__(self,mu):
         self.mu = mu
-        self.mean = mean
+        self.mean = 0.0
         self.times = 0
 
     def pull(self):
@@ -20,24 +20,27 @@ class GreedyBandit():
         self.times += 1
         self.mean = (self.mean*(self.times-1)+xn)/self.times
 
-    def run(self,mu1,mu2,mu3,epsilon=0.1,N=10000):
-        bandits = [GreedyBandit(mu1,self.mean),GreedyBandit(mu2,self.mean),GreedyBandit(mu3,self.mean)] #Declare bandits
-        data = np.empty(N)          #data is used to store output of Epsilon Greedy Algorithm.
-        for i in range(N): #Run Epsilon Greedy N times.
-            p = np.random.random() #Get a random number p.
+    def run(self,mu1,mu2,mu3,N=10000):
+        bandits = [DecGreedyBandit(mu1),DecGreedyBandit(mu2),DecGreedyBandit(mu3)] #Declare bandits
+        data = np.empty(N) #data is used to store output of Epsilon Greedy Algorithm.
+
+        #Run Decreasing Epsilon Greedy N times.
+        for i in range(N):
+            epsilon = (1 / (i*0.1+1)) #Decrease the epsilon.
+
+            p = np.random.random()
             if p < epsilon:
                 #Randomly choose a bandit .
-                j = np.random.choice(3) 
+                j = np.random.choice(3)
             else:
-                #Choose bandit which has biggest mean.
-                j = np.argmax([b.mean for b in bandits]) 
-            
+                #Choose bandit which has highest mean.
+                j = np.argmax([b.mean for b in bandits])
             x=bandits[j].pull()     #Pull the bandit and store the reward value.
             bandits[j].update(x)    #Update the mean value of bandit.
-            data[i] = x             #Record the reward value.
-
+            data[i] = x             #Record the value every time.
+        
         cumul_average = np.cumsum(data)/(np.arange(N)+1) #Calculate the cumulative reward.
- 
+
         return cumul_average
     
         

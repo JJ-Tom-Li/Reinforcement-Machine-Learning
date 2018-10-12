@@ -6,19 +6,50 @@ Created on Wed Oct  3 10:54:37 2018
 """
 
 from greedyBandit import GreedyBandit 
-#from optiBandit import run as runOpti
-#from UCBIBandit import run as runUCBI
-#from TSBandit import run as runTS
-#from decGreedyBandit import run as runDecGreedy #(optional)
+from decGreedyBandit import DecGreedyBandit
+from optiBandit import OptiBandit
+from UCBBandit import UCBBandit
+from TSBandit import TSBandit
+
 
 import matplotlib.pyplot as plt
  
-times = 1000000 #Simulation times
-greedy = GreedyBandit(0)
-result = greedy.run(0.8,0.5,0.2,epsilon=0.1,N=times) 
-plt.plot(result)
+times = 10000 #Simulation times
+
+greedy = GreedyBandit(0,0)        #Greedy Bandit
+dec_greedy = DecGreedyBandit(0) #Decreasing Greedy Bandit
+opti = OptiBandit(0)            #Optimistic Initial Value Bandit
+ucb = UCBBandit(0)              #UCB Bandit
+ts = TSBandit(0)                #TS Bandit
+
+#Function Arguments
+m1=0.9
+m2=0.5
+m3=0.2
+e=0.1
+
+#Run Epsilon Greedy 
+greedy_result = greedy.run(m1,m2,m3,e,times) 
+
+#Run Decreasing Epsilon Greedy 
+dec_greedy_result = dec_greedy.run(m1,m2,m3,times)
+
+#Run Optimistic Initial Value 
+opti_result = opti.run(m1,m2,m3,e,times)
+
+#Run UCB 
+ucb_result = ucb.run(m1,m2,m3,times) 
+
+#Run Thompson Sampling 
+ts_result = ts.run(m1,m2,m3,times) 
+
+#Plot the result
+plt.plot(greedy_result,label="Epsilon Greedy")
+plt.plot(dec_greedy_result,label="Decreasing Epsilon Greedy")
+plt.plot(opti_result,label="Optimistic Initial Value")
+plt.plot(ucb_result,label="UCB1")
+plt.plot(ts_result,label="Thompson Sampling")
+
+#Show the graph
+plt.legend(loc='upper right')
 plt.show()
-#runOpti(0.1,mu1=0.8,mu2=0.5,mu3=0.2)
-#runUCBI(N)
-#runTS(N)
-#runDecGreedy(N)
