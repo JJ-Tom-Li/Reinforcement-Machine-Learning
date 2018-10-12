@@ -23,8 +23,10 @@ class GreedyBandit():
     def run(self,mu1,mu2,mu3,epsilon=0.1,N=10000):
         bandits = [GreedyBandit(mu1,self.mean),GreedyBandit(mu2,self.mean),GreedyBandit(mu3,self.mean)] #Declare bandits
         data = np.empty(N)          #data is used to store output of Epsilon Greedy Algorithm.
+        
         for i in range(N): #Run Epsilon Greedy N times.
             p = np.random.random() #Get a random number p.
+            
             if p < epsilon:
                 #Randomly choose a bandit .
                 j = np.random.choice(3) 

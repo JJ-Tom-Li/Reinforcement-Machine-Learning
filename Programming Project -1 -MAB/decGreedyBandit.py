@@ -35,6 +35,7 @@ class DecGreedyBandit():
             else:
                 #Choose bandit which has highest mean.
                 j = np.argmax([b.mean for b in bandits])
+                
             x=bandits[j].pull()     #Pull the bandit and store the reward value.
             bandits[j].update(x)    #Update the mean value of bandit.
             data[i] = x             #Record the value every time.
